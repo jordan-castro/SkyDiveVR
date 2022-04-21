@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Dive WebXR</title>
+
+    <!-- Including AFrame -->
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <!-- A Frame Extras -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <!-- A Frame Physics -->
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v4.0.1/dist/aframe-physics-system.min.js"></script>
+
+    <!-- Log in VR, but remove when going into Production mode -->
+    <script src="https://unpkg.com/aframe-log-component/dist/aframe-log-component.min.js"></script>
+
+    <script src="https://unpkg.com/aframe-physics-extras@0.1.3/dist/aframe-physics-extras.min.js"></script>
+
+    <!-- The collider logic -->
+    <script
+        src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
+
+    <!-- Our Main JS -->
+    <script src="scripts/index.js" type="module"></script>
+    <script src="scripts/controls.js" type="module"></script>
+</head>
+
+<body>
+    <noscript>
+        This app needs javascript to run. Enable it.
+    </noscript>
+
+    <a-scene background="color: #1a237e" physics="debug: true">
+        <!-- The assets -->
+        <a-assets>
+            <a-asset-item id="point-ring" src="assets/Ring/PointRing.glb"></a-asset-item>
+            <a-asset-item id="boost-ring" src="assets/Ring/BoostRing.glb"></a-asset-item>
+            <a-asset-item id="slow-ring" src="assets/Ring/SlowRing.glb"></a-asset-item>
+
+            <a-mixin id="movable-dynamic-body" body="type: dynamic; mass: 5; shape: none;"
+                shape__main="shape: box; halfExtents: 20 0.4 20">
+            </a-mixin>
+        </a-assets>
+        <!-- The Player Rig -->
+
+        <a-entity id="rig" 
+                movement-controls="speed: 0.7;"
+                position="2 201 0">
+            <a-entity camera position="0 1.6 0" 
+                    look-controls ring-collider
+                    geometry="primitive: box"
+                    aabb-collider="objects: .rings, .grounds; interval: 10"
+                    id="camera">
+            </a-entity>
+            <a-entity id="left-hand" hand-controls="hand: left" mixin="controller">
+            </a-entity>
+            <a-entity id="right-hand" hand-controls="hand: right" mixin="controller">
+            </a-entity>
+        </a-entity>
+
+        <!-- The start where the player will fall to -->
+        <a-plane id="ground" class="grounds" position="0 0 0" scale="10 10 10" rotation="-90 0 0" width="4"
+            height="4" color="#7BC8A4" shadow></a-plane> 
+        <!-- A box with text on it -->
+
+        <a-box position="0 3 0" scale="2 2 2" class="sky-dive-collider" color="#311b92">
+            <a-text id="score-text" value="Sky Dive" position="0.508 0.016 0.352" rotation="0 90 0" width="4" color="#FFFFFF"></a-text>
+        </a-box>
+
+        <!-- Where the player starts -->
+        <a-box id="start" class="sky-dive-collider" position="2 200 0" rotation="-90 0 0" width="4" height="4"
+            color="#7BC8A4" shadow></a-box>
+    </a-scene>
+
+    <!-- Custom Comps -->
+    <script src="scripts/ac.js" type="module"></script>
+</body>
+
+</html>
